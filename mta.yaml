@@ -5,12 +5,10 @@ description: "A simple CAP project."
 parameters:
   enable-parallel-deployments: true
 modules:
-  - name: cap_sample-srv
+  - name: cap_sample_srv
     type: java
     path: srv
     parameters:
-      disk-quota: 256M
-      memory: 256M
       buildpack: sap_java_buildpack
       readiness-health-check-type: http
       readiness-health-check-http-endpoint: /
@@ -29,9 +27,9 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: cap_sample-auth
-      - name: app-api
-        properties:
-          CDS_MULTITENANCY_APPUI_URL: ~{url}
+#      - name: app-api
+#        properties:
+#          CDS_MULTITENANCY_APPUI_URL: ~{url}
 
   - name: cap_sample
     type: approuter.nodejs
@@ -48,10 +46,6 @@ modules:
           url: ~{srv-url}
           forwardAuthToken: true
       - name: cap_sample-auth
-    provides:
-      - name: app-api
-        properties:
-          url: ${default-url}
 
 resources:
   - name: cap_sample-auth
