@@ -27,9 +27,13 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: cap_sample-auth
-#      - name: app-api
-#        properties:
-#          CDS_MULTITENANCY_APPUI_URL: ~{url}
+      - name: cap_sample-db
+      - name: app-api
+        properties:
+          CDS_MULTITENANCY_APPUI_URL: ~{url}
+  #      - name: app-api
+  #        properties:
+  #          CDS_MULTITENANCY_APPUI_URL: ~{url}
 
   - name: cap_sample
     type: approuter.nodejs
@@ -46,6 +50,25 @@ modules:
           url: ~{srv-url}
           forwardAuthToken: true
       - name: cap_sample-auth
+      - name: app-api
+        properties:
+          url: ${default-url}
+    provides:
+      - name: app-api
+        properties:
+          url: ${default-url}
+
+  - name: cap_sample-db-deployer
+    type: hdb
+    path: db
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: custom
+      commands:
+        - npm run build
+    requires:
+      - name: cap_sample-db
 
 resources:
   - name: cap_sample-auth
@@ -57,3 +80,8 @@ resources:
       config:
         xsappname: cap_sample-${org}-${space}
         tenant-mode: dedicated
+  - name: cap_sample-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared

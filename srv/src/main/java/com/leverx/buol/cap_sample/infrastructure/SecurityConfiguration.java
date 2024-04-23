@@ -18,7 +18,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain appFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher(AntPathRequestMatcher.antMatcher("/public/**"))
+                .securityMatcher(AntPathRequestMatcher.antMatcher("/**"))
                 .csrf(AbstractHttpConfigurer::disable) // don't insist on csrf tokens in put, post etc.
                 .authorizeHttpRequests(r -> r.anyRequest().permitAll())
 
