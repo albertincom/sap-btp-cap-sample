@@ -1,8 +1,21 @@
 {
   "requires": {
     "[production]": {
-      "auth": "xsuaa"
+      "auth": "xsuaa",
+      "multitenancy": true,
+      "db": "hana"
     },
-    "db": "hana"
-  }
+    "db": "hana",
+    "[hybrid]": {
+      "db": "hana",
+      "multitenancy": true
+    },
+    "[local-multitenancy]": {
+      "multitenancy": true
+    }
+  },
+  "profiles": [
+    "with-mtx-sidecar",
+    "java"
+  ]
 }

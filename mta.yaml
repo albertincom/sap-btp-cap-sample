@@ -16,6 +16,7 @@ modules:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
       JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'
+      CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
     build-parameters:
       builder: custom
       commands:
@@ -27,10 +28,15 @@ modules:
           srv-url: ${default-url}
     requires:
       - name: cap_sample-auth
-      - name: cap_sample-db
       - name: app-api
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{url}
+      - name: mtx-api
+        properties:
+          CDS_MULTITENANCY_MTXS_ENABLED: true
+          CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
+      - name: cap_sample-registry
+      - name: cap_sample-db
   #      - name: app-api
   #        properties:
   #          CDS_MULTITENANCY_APPUI_URL: ~{url}
@@ -53,21 +59,37 @@ modules:
       - name: app-api
         properties:
           url: ${default-url}
+      - name: mtx-api
+        group: destinations
+        properties:
+          name: mtx-api # must be used in xs-app.json as well
+          url: ~{mtx-url}
     provides:
       - name: app-api
         properties:
           url: ${default-url}
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-${default-uri}"
 
-  - name: cap_sample-db-deployer
-    type: hdb
-    path: db
-    parameters:
-      buildpack: nodejs_buildpack
+  - name: cap_sample-mtx
+    type: nodejs
+    path: mtx/sidecar
     build-parameters:
       builder: custom
+      build-result: gen
       commands:
         - npm run build
+      requires:
+        - name: cap_sample_srv
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
     requires:
+      - name: cap_sample-auth
       - name: cap_sample-db
 
 resources:
@@ -79,9 +101,29 @@ resources:
       path: ./xs-security.json
       config:
         xsappname: cap_sample-${org}-${space}
-        tenant-mode: dedicated
-  - name: cap_sample-db
-    type: com.sap.xs.hdi-container
+        tenant-mode: shared
+  - name: cap_sample-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
     parameters:
-      service: hana
-      service-plan: hdi-shared
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: cap_sample-${org}-${space}
+        appName: cap_sample-${org}-${space}
+        displayName: cap_sample
+        description: A simple CAP project.
+        category: 'Category'
+        appUrls:
+          getDependencies: ~{srv-api/srv-url}/mt/v1.0/subscriptions/dependencies
+          onSubscription: ~{srv-api/srv-url}/mt/v1.0/subscriptions/tenants/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that
+  - name: cap_sample-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container

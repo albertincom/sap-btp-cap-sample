@@ -1,0 +1,49 @@
+{
+  "namespace": "my.bookshop",
+  "definitions": {
+    "my.bookshop.Books": {
+      "kind": "entity",
+      "@cds.persistence.journal": true,
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.Integer",
+          "@cds.persistence.name": "ID"
+        },
+        "title": {
+          "type": "cds.String",
+          "length": 5000,
+          "@cds.persistence.name": "TITLE"
+        },
+        "stock": {
+          "type": "cds.Integer",
+          "@cds.persistence.name": "STOCK"
+        }
+      },
+      "@cds.persistence.name": "MY_BOOKSHOP_BOOKS"
+    },
+    "my.bookshop.Notes": {
+      "kind": "entity",
+      "@cds.persistence.journal": true,
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 36,
+          "@cds.persistence.name": "ID"
+        },
+        "note": {
+          "type": "cds.String",
+          "length": 5000,
+          "@cds.persistence.name": "NOTE"
+        }
+      },
+      "@cds.persistence.name": "MY_BOOKSHOP_NOTES"
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v4.8.0",
+    "build": "CDS Build v7.8.2"
+  },
+  "$version": "2.0"
+}
