@@ -27,3 +27,26 @@ public class SubscriptionHandler implements EventHandler {
 	}
 
 }
+
+/*
+package com.leverx.buol.cap_sample.handlers;
+
+import org.springframework.stereotype.Component;
+
+import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.Before;
+import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.mt.MtSubscriptionService;
+import com.sap.cds.services.mt.MtUnsubscribeEventContext;
+
+@Component
+@ServiceName(MtSubscriptionService.DEFAULT_NAME)
+public class SubscriptionHandler implements EventHandler {
+
+	@Before(event = MtSubscriptionService.EVENT_SUBSCRIBE)
+	public void beforeSubscription(MtSubscribeEventContext context) {
+		// Activities before tenant database container is created
+	}
+
+}
+*/

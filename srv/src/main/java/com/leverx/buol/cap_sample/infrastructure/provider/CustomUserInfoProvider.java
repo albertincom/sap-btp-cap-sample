@@ -1,3 +1,4 @@
+/*
 package com.leverx.buol.cap_sample.infrastructure.provider;
 
 import com.sap.cds.feature.xsuaa.XsuaaUserInfo;
@@ -34,3 +35,4 @@ public class CustomUserInfoProvider implements UserInfoProvider {
         this.defaultProvider = prev;
     }
 }
+*/

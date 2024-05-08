@@ -37,9 +37,6 @@ modules:
           CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
       - name: cap_sample-registry
       - name: cap_sample-db
-  #      - name: app-api
-  #        properties:
-  #          CDS_MULTITENANCY_APPUI_URL: ~{url}
 
   - name: cap_sample
     type: approuter.nodejs

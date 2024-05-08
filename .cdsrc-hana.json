@@ -4,9 +4,12 @@
       "auth": "xsuaa",
       "multitenancy": true,
       "extensibility": true,
-      "toggles": true
+      "toggles": true,
+      "db": "hana"
     },
+    "db": "hana",
     "[hybrid]": {
+      "db": "hana",
       "multitenancy": true
     },
     "[local-multitenancy]": {
